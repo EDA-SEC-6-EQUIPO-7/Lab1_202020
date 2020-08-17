@@ -105,7 +105,14 @@ def countElementsByCriteria(criteria, column, lst):
     """
     Retorna la cantidad de elementos que cumplen con un criterio para una columna dada
     """
-    return 0
+    counter = 0
+    if len(lst) == 0:
+        print("La lista está vacía")
+    else:
+        for element in lst:
+            if criteria.lower() in element[column].lower():
+                counter += 1
+    return counter
 
 
 def main():
@@ -122,19 +129,24 @@ def main():
         inputs =input('Seleccione una opción para continuar\n') #leer opción ingresada
         if len(inputs)>0:
             if int(inputs[0])==1: #opcion 1
-                loadCSVFile("Data/test.csv", lista) #llamar funcion cargar datos
+                file2load = input("Ingrese el nombre del archivo que quiere cargar:\n")
+                loadCSVFile("Data/" + file2load, lista) #llamar funcion cargar datos
                 print("Datos cargados, "+str(len(lista))+" elementos cargados")
             elif int(inputs[0])==2: #opcion 2
                 if len(lista)==0: #obtener la longitud de la lista
                     print("La lista esta vacía")    
-                else: print("La lista tiene "+str(len(lista))+" elementos")
+                else: 
+                    print("La lista tiene "+str(len(lista))+" elementos")
+                    print("Cada elemento tiene "+str(len(lista[1]))+" datos")
             elif int(inputs[0])==3: #opcion 3
-                criteria =input('Ingrese el criterio de búsqueda\n')
-                counter=countElementsFilteredByColumn(criteria, "nombre", lista) #filtrar una columna por criterio  
+                """ column = input("Ingrese la columna en la cuál desea buscar: \n") """
+                column = "director_name"
+                criteria = input('Ingrese el criterio de búsqueda\n')
+                counter=countElementsFilteredByColumn(criteria, column, lista) #filtrar una columna por criterio  
                 print("Coinciden ",counter," elementos con el crtierio: ", criteria  )
             elif int(inputs[0])==4: #opcion 4
                 criteria =input('Ingrese el criterio de búsqueda\n')
-                counter=countElementsByCriteria(criteria,0,lista)
+                counter=countElementsByCriteria(criteria,"director_name",lista)
                 print("Coinciden ",counter," elementos con el crtierio: '", criteria ,"' (en construcción ...)")
             elif int(inputs[0])==0: #opcion 0, salir
                 sys.exit(0)
