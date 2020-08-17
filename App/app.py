@@ -101,18 +101,35 @@ def countElementsFilteredByColumn(criteria, column, lst):
         print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
     return counter
 
-def countElementsByCriteria(criteria, column, lst):
+def countElementsByCriteria(dName, lst1, lst2):
     """
-    Retorna la cantidad de elementos que cumplen con un criterio para una columna dada
+    Retorna la cantidad de películas que existen de un director que tengan un rate promedio mayor o igual a 6
     """
+    t1_start = process_time()
+    sum = 0
     counter = 0
-    if len(lst) == 0:
+    prom = 0
+    if len(lst1) == 0 or len(lst2) == 0:
         print("La lista está vacía")
     else:
-        for element in lst:
-            if criteria.lower() in element[column].lower():
-                counter += 1
-    return counter
+        for element in lst2:
+            if dName.lower() in element["director_name"].lower():
+                for movie in lst1:
+                    if movie["id"] == element["id"]:
+                        if float(movie["vote_average"]) >= 6:
+                            counter += 1
+                            sum += float(movie["vote_average"])
+    if counter != 0:
+        prom = sum/counter
+        
+    else:
+        prom = 0
+        
+    t1_stop = process_time()
+    print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
+    return (counter,prom)
+        
+
 
 
 def main():
@@ -145,9 +162,15 @@ def main():
                 counter=countElementsFilteredByColumn(criteria, column, lista) #filtrar una columna por criterio  
                 print("Coinciden ",counter," elementos con el crtierio: ", criteria  )
             elif int(inputs[0])==4: #opcion 4
-                criteria =input('Ingrese el criterio de búsqueda\n')
-                counter=countElementsByCriteria(criteria,"director_name",lista)
-                print("Coinciden ",counter," elementos con el crtierio: '", criteria ,"' (en construcción ...)")
+                f1 = input("Ingrese el nombre del archivo que quiere cargar:\n")
+                lst1 = []
+                loadCSVFile("Data/" + f1, lst1)
+                f2 = input("Ingrese el nombre del archivo que quiere cargar:\n")
+                lst2 = []
+                loadCSVFile("Data/" + f2, lst2)
+                director = input("Ingrese la columna en la cuál desea buscar: \n") 
+                counter=countElementsByCriteria(director,lst1,lst2)
+                print(counter)
             elif int(inputs[0])==0: #opcion 0, salir
                 sys.exit(0)
 
